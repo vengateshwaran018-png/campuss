@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Smart Campus - Login</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="login-page">
+  <div class="login-box">
+    <div class="logo"><span>SC</span> Smart Campus</div>
+    <p class="college">St. Joseph College of Engineering and Technology, Thanjavur</p>
+
+    <div id="message"></div>
+
+    <!-- login form -->
+    <div id="login-form">
+      <h2>Login</h2>
+      <input type="email" id="login-email" placeholder="Email">
+      <input type="password" id="login-password" placeholder="Password">
+      <button class="btn" id="login-btn">Sign in</button>
+      <p class="or">or</p>
+      <button class="btn google" id="google-btn">Sign in with Google</button>
+      <p class="switch">New here? <a id="to-register">Register</a></p>
+    </div>
+
+    <!-- register form -->
+    <div id="register-form" class="hidden">
+      <h2>Register</h2>
+      <input type="text" id="reg-name" placeholder="Full name">
+      <input type="email" id="reg-email" placeholder="Email">
+      <input type="password" id="reg-password" placeholder="Password (min 6 characters)">
+      <input type="text" id="reg-phone" placeholder="Your phone number">
+      <input type="text" id="reg-alt-phone" placeholder="Alternative phone number (for SOS)">
+      <input type="email" id="reg-alt-email" placeholder="Alternative email (for SOS)">
+      <button class="btn" id="register-btn">Register</button>
+      <p class="switch">Already registered? <a id="to-login">Login</a></p>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/login.js"></script>
+</body>
+</html>

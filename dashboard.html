@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Smart Campus - Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="sidebar" id="sidebar">
+    <div class="logo"><span>SC</span> Smart Campus</div>
+    <a href="#" data-page="dashboard" class="active">Dashboard</a>
+    <a href="#" data-page="learning">AI Learning</a>
+    <a href="#" data-page="transport">Transport</a>
+    <a href="#" data-page="dining">Dining</a>
+    <a href="#" data-page="library">Library</a>
+    <div class="line"></div>
+    <a href="#" data-page="attendance">Attendance</a>
+    <a href="#" data-page="analytics">Analytics</a>
+    <a href="#" data-page="events">Events</a>
+    <div class="line"></div>
+    <a href="#" data-page="map">Campus Map</a>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <h2 id="welcome">Welcome</h2>
+      <button id="logout-btn">Logout</button>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="page" id="page-dashboard">
+      <div class="cards">
+        <div class="card"><h4>Attendance today</h4><p id="dash-att">0 / 8</p><small>periods attended</small></div>
+        <div class="card"><h4>Next bus</h4><p id="dash-bus">-</p><small id="dash-bus-small"></small></div>
+        <div class="card"><h4>Canteen special</h4><p id="dash-food">-</p><small id="dash-food-price"></small></div>
+        <div class="card"><h4>Library</h4><p id="dash-lib">0 books</p><small>reserved by you</small></div>
+      </div>
+      <div class="box">
+        <h3>Upcoming events</h3>
+        <ul id="event-list"></ul>
+      </div>
+      <div class="box" id="college-info"></div>
+    </div>
+
+    <!-- AI Learning -->
+    <div class="page hidden" id="page-learning">
+      <div class="box">
+        <h3>AI Learning</h3>
+        <p class="note">Choose your department to see the subjects. Notes open online, videos open the 4G Silver Academy channel search for that subject.</p>
+        <select id="dept-select"></select>
+        <input type="text" id="subject-search" placeholder="Search subject..." class="search-box">
+        <table id="subject-table"></table>
+      </div>
+    </div>
+
+    <!-- Transport -->
+    <div class="page hidden" id="page-transport">
+      <div class="box">
+        <h3>Bus routes and timings</h3>
+        <table id="bus-table"></table>
+      </div>
+      <div class="box">
+        <h3>Live bus location</h3>
+        <p class="note">Demo: the bus position here is sample data. Real GPS tracking comes in the next step.</p>
+        <div id="bus-map" class="map"></div>
+      </div>
+    </div>
+
+    <!-- Dining -->
+    <div class="page hidden" id="page-dining">
+      <div class="box">
+        <h3>Canteen menu</h3>
+        <table id="menu-table"></table>
+      </div>
+    </div>
+
+    <!-- Library -->
+    <div class="page hidden" id="page-library">
+      <div class="box">
+        <h3>Library books</h3>
+        <p class="note">Reserve a book here and collect it from the library.</p>
+        <table id="book-table"></table>
+      </div>
+      <div class="box">
+        <h3>Your reservations</h3>
+        <ul id="my-books"></ul>
+      </div>
+    </div>
+
+    <!-- Attendance -->
+    <div class="page hidden" id="page-attendance">
+      <div class="box">
+        <h3>Today's attendance</h3>
+        <table id="att-table"></table>
+      </div>
+      <div class="box">
+        <h3>Face scan</h3>
+        <p class="note">Start the camera and look at it, then press Scan. Attendance is marked only when a face is detected. (It detects a face, it does not yet check whose face it is.)</p>
+        <video id="cam" autoplay playsinline class="hidden"></video><br>
+        <p id="face-status" class="note">Camera is off.</p>
+        <button class="small-btn" id="cam-start">Start camera</button>
+        <button class="small-btn" id="cam-scan">Scan and mark</button>
+      </div>
+    </div>
+
+    <!-- Analytics -->
+    <div class="page hidden" id="page-analytics">
+      <div class="box">
+        <h3>Attendance by subject</h3>
+        <div id="bars"></div>
+      </div>
+    </div>
+
+    <!-- Events -->
+    <div class="page hidden" id="page-events">
+      <div class="box">
+        <h3>College events</h3>
+        <table id="event-table"></table>
+      </div>
+    </div>
+
+    <!-- Campus Map -->
+    <div class="page hidden" id="page-map">
+      <div class="box">
+        <h3>Campus map</h3>
+        <p class="note" id="map-note">Click a marker to see the place.</p>
+        <div id="campus-map" class="map"></div>
+      </div>
+    </div>
+  </div>
+
+  <button id="sos-btn">SOS</button>
+
+  <button id="chat-btn">Ask Campus Bot</button>
+  <div id="chat-box" class="hidden">
+    <div id="chat-head">Campus Bot</div>
+    <div id="chat-msgs"></div>
+    <form id="chat-form">
+      <input id="chat-input" placeholder="Type your question..." autocomplete="off">
+      <button type="submit">Send</button>
+    </form>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3.11.0/dist/email.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.12/dist/face-api.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/pages.js"></script>
+  <script src="js/chatbot.js"></script>
+  <script src="js/sos.js"></script>
+</body>
+</html>
